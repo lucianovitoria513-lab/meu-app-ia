@@ -15,15 +15,25 @@ export async function POST(req) {
       }
     });
 
+    console.log("RESULT:", result);
+
+    // 👇 VALIDAÇÃO IMPORTANTE
+    if (!result?.images || result.images.length === 0) {
+      return Response.json(
+        { error: "Nenhuma imagem retornada" },
+        { status: 500 }
+      );
+    }
+
     return Response.json({
       url: result.images[0].url
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("ERRO COMPLETO:", error);
 
     return Response.json(
-      { error: "Erro ao gerar imagem" },
+      { error: error.message || "Erro na geração" },
       { status: 500 }
     );
   }
