@@ -9,8 +9,11 @@ async function gerarImagem() {
 
     const data = await res.json();
 
-    if (data.error) {
-      alert("Erro: " + data.error);
+    console.log("RESPOSTA FRONT:", data);
+
+    // 👇 FORÇA MOSTRAR O QUE VEIO
+    if (!data.url) {
+      alert("Erro: " + JSON.stringify(data));
       setLoading(false);
       return;
     }
