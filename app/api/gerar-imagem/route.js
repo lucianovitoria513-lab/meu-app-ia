@@ -4,6 +4,10 @@ export async function POST(req) {
   try {
     const { prompt } = await req.json();
 
+    if (!process.env.FAL_KEY) {
+      return Response.json({ error: "FAL_KEY não definida" }, { status: 500 });
+    }
+
     fal.config({
       credentials: process.env.FAL_KEY
     });
@@ -17,23 +21,15 @@ export async function POST(req) {
 
     console.log("RESULT:", result);
 
-    // 👇 VALIDAÇÃO IMPORTANTE
-    if (!result?.images || result.images.length === 0) {
-      return Response.json(
-        { error: "Nenhuma imagem retornada" },
-        { status: 500 }
-      );
-    }
-
     return Response.json({
-      url: result.images[0].url
+      url: result?.images?.[0]?.url || null
     });
 
   } catch (error) {
-    console.error("ERRO COMPLETO:", error);
+    console.error("ERRO:", error);
 
     return Response.json(
-      { error: error.message || "Erro na geração" },
+      { error: error.message },
       { status: 500 }
     );
   }

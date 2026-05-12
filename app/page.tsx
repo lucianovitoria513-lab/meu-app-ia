@@ -4,17 +4,18 @@ async function gerarImagem() {
   try {
     const res = await fetch("/api/gerar-imagem", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json" // 👈 FALTAVA ISSO
+      },
       body: JSON.stringify({ prompt }),
     });
 
     const data = await res.json();
 
-    console.log("RESPOSTA FRONT:", data);
+    console.log("RESPOSTA:", data);
 
-    // 👇 FORÇA MOSTRAR O QUE VEIO
     if (!data.url) {
       alert("Erro: " + JSON.stringify(data));
-      setLoading(false);
       return;
     }
 
@@ -22,6 +23,7 @@ async function gerarImagem() {
 
   } catch (err) {
     alert("Erro ao conectar com API");
+    console.error(err);
   }
 
   setLoading(false);
